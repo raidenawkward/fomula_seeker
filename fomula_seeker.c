@@ -10,6 +10,9 @@
 #include "tree_node_base.h"
 #include "tree_operation.h"
 
+#include "used_set.h"
+
+
 static struct tree_operations *init_tree_operation() {
 	struct tree_operations *tree_op = tree_get_operation();
 	return tree_op;
@@ -73,9 +76,9 @@ static Boolean init_tree_root_node(struct Tree *tree, struct tree_operations *t_
 	return true;
 }
 
-static Int32 init_operator_set(seeker_operator** set) {
+static Int32 init_operator_set(SeekerOperator** set) {
 	Int32 count = OPERA_DIVIDE - OPERA_INVALID + 1;
-	*set = (seeker_operator*)malloc(count * sizeof(seeker_operator));
+	*set = (SeekerOperator*)malloc(count * sizeof(SeekerOperator));
 	if (!set)
 		return -1;
 	Int32 i;
@@ -83,6 +86,14 @@ static Int32 init_operator_set(seeker_operator** set) {
 		(*set)[i] = OPERA_INVALID + i;
 
 	return count;
+}
+
+static Boolean next_unused_operator(SeekerOperator *operator_set, Boolean *used_set, SeekerOperator *result) {
+	return false;
+}
+
+static Boolean next_unused_number(Int32 *num_set, Boolean *used_set, Int32 *result) {
+	return false;
 }
 
 Int32 seek_fomula(Int32 target, Int32 *num_set, Int32 num_count, Char*** result) {
@@ -96,12 +107,20 @@ Int32 seek_fomula(Int32 target, Int32 *num_set, Int32 num_count, Char*** result)
 	if (!init_tree_root_node(assistant_tree,tree_operation,num_set,num_count))
 		return -1;
 
-	seeker_operator *operator_set;
+	SeekerOperator *operator_set;
 	Int32 operator_count = init_operator_set(&operator_set);
 	if (operator_count <= 0)
 		return 0;
 
+	struct used_set *num_used_set, *operator_used_set;
+	if (!used_set_init(&num_used_set,num_count))
+		return -1;
+	if (!used_set_init(&operator_used_set,operator_count))
+		return -1;
 
+
+	used_set_destory(&num_used_set);
+	used_set_destory(&operator_used_set);
 	free(operator_set);
 	destory_assistant_tree(&assistant_tree,tree_operation);
 	free(tree_operation);

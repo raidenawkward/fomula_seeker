@@ -11,13 +11,13 @@ typedef enum {
 	OPERA_SUBTRACT,
 	OPERA_MULTIPLE,
 	OPERA_DIVIDE
-} seeker_operator;
+} SeekerOperator;
 
 typedef enum {
 	TNODE_TYPE_UNKNOWN = 0,
 	TNODE_TYPE_ROOT,
 	TNODE_TYPE_NUM,
 	TNODE_TYPE_OPERATOR
-} tree_node_type;
+} TreeNodeType;
 
 #endif // _FOMULA_SEEKER_DEFINE_H

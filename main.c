@@ -15,6 +15,7 @@ static void show_help_info(const char* program_name) {
 		pname = (char*)malloc(6 * sizeof(char));
 		strcpy(pname,"seeker");
 	}
+	printf("this program is used for getting every integer fomula with target mathematical calculation result by using the given numbers\n");
 	printf("usage : %s num1 num2 num3 ...\n",pname);
 }
 
