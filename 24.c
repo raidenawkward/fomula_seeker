@@ -50,7 +50,6 @@ static void destory_assistant_tree(struct Tree **tree, struct tree_operations *t
 	if (!tree)
 		return;
 	t_op->destory(tree);
-	free(t_op);
 }
 
 static Boolean init_tree_root_node(struct Tree *tree, struct tree_operations *t_op, Int32 *num, Int32 num_count) {
@@ -74,6 +73,18 @@ static Boolean init_tree_root_node(struct Tree *tree, struct tree_operations *t_
 	return true;
 }
 
+static Int32 init_operator_set(operator_24** set) {
+	Int32 count = OPERA_DIVIDE - OPERA_INVALID + 1;
+	*set = (operator_24*)malloc(count * sizeof(operator_24));
+	if (!set)
+		return -1;
+	Int32 i;
+	for (i = 0; i < count; ++i)
+		(*set)[i] = OPERA_INVALID + i;
+
+	return count;
+}
+
 Int32 seek_24_fomula(Int32 *num, Int32 num_count, Char*** result) {
 	Int32 res_count = 0;
 
@@ -85,8 +96,15 @@ Int32 seek_24_fomula(Int32 *num, Int32 num_count, Char*** result) {
 	if (!init_tree_root_node(assistant_tree,tree_operation,num,num_count))
 		return -1;
 
+	operator_24 *operator_set;
+	Int32 operator_count = init_operator_set(&operator_set);
+	if (operator_count <= 0)
+		return 0;
 
+
+	free(operator_set);
 	destory_assistant_tree(&assistant_tree,tree_operation);
+	free(tree_operation);
 
 	return res_count;
 }
