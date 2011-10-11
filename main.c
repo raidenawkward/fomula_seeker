@@ -1,7 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "24.h"
+#include "fomula_seeker.h"
+
+#define CALCULATED_TARGET 24
 
 static void show_help_info(const char* program_name) {
 	char* pname = NULL;
@@ -10,8 +12,8 @@ static void show_help_info(const char* program_name) {
 		strcpy(pname,program_name);
 	}
 	else {
-		pname = (char*)malloc(2 * sizeof(char));
-		strcpy(pname,"24");
+		pname = (char*)malloc(6 * sizeof(char));
+		strcpy(pname,"seeker");
 	}
 	printf("usage : %s num1 num2 num3 ...\n",pname);
 }
@@ -34,7 +36,7 @@ int main(int argc, char** argv) {
 		input[i - 1] = atoi(argv[i]);
 	}
 	char** ret;
-	int result_count = seek_24_fomula(input,argc - 1,&ret);
+	int result_count = seek_fomula(CALCULATED_TARGET,input,argc - 1,&ret);
 
 	if (result_count > 0) {
 		printf("there are %d results for input ");

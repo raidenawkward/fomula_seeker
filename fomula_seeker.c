@@ -1,6 +1,6 @@
-#include "24.h"
+#include "fomula_seeker.h"
 
-#include "24_define.h"
+#include "fomula_seeker_define.h"
 #include "tree_define.h"
 
 #include "tree.h"
@@ -52,8 +52,8 @@ static void destory_assistant_tree(struct Tree **tree, struct tree_operations *t
 	t_op->destory(tree);
 }
 
-static Boolean init_tree_root_node(struct Tree *tree, struct tree_operations *t_op, Int32 *num, Int32 num_count) {
-	if (!tree || !t_op || !num || num_count < 0)
+static Boolean init_tree_root_node(struct Tree *tree, struct tree_operations *t_op, Int32 *num_set, Int32 num_count) {
+	if (!tree || !t_op || !num_set || num_count < 0)
 		return false;
 	if (!tree->root)
 		return false;
@@ -64,7 +64,7 @@ static Boolean init_tree_root_node(struct Tree *tree, struct tree_operations *t_
 		if (!node)
 			return false;
 
-		node->data = num[i];
+		node->data = num_set[i];
 		node->flag = TNODE_TYPE_NUM;
 		if (!t_op->append_child(tree,tree->root,node))
 			return false;
@@ -73,9 +73,9 @@ static Boolean init_tree_root_node(struct Tree *tree, struct tree_operations *t_
 	return true;
 }
 
-static Int32 init_operator_set(operator_24** set) {
+static Int32 init_operator_set(seeker_operator** set) {
 	Int32 count = OPERA_DIVIDE - OPERA_INVALID + 1;
-	*set = (operator_24*)malloc(count * sizeof(operator_24));
+	*set = (seeker_operator*)malloc(count * sizeof(seeker_operator));
 	if (!set)
 		return -1;
 	Int32 i;
@@ -85,7 +85,7 @@ static Int32 init_operator_set(operator_24** set) {
 	return count;
 }
 
-Int32 seek_24_fomula(Int32 *num, Int32 num_count, Char*** result) {
+Int32 seek_fomula(Int32 target, Int32 *num_set, Int32 num_count, Char*** result) {
 	Int32 res_count = 0;
 
 	struct tree_operations *tree_operation = init_tree_operation();
@@ -93,10 +93,10 @@ Int32 seek_24_fomula(Int32 *num, Int32 num_count, Char*** result) {
 	if (!assistant_tree)
 		return -1;
 
-	if (!init_tree_root_node(assistant_tree,tree_operation,num,num_count))
+	if (!init_tree_root_node(assistant_tree,tree_operation,num_set,num_count))
 		return -1;
 
-	operator_24 *operator_set;
+	seeker_operator *operator_set;
 	Int32 operator_count = init_operator_set(&operator_set);
 	if (operator_count <= 0)
 		return 0;

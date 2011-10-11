@@ -1,5 +1,5 @@
-#ifndef _24_DEFINE_H
-#define _24_DEFINE_H
+#ifndef _FOMULA_SEEKER_DEFINE_H
+#define _FOMULA_SEEKER_DEFINE_H
 
 #include <stdlib.h>
 
@@ -11,13 +11,13 @@ typedef enum {
 	OPERA_SUBTRACT,
 	OPERA_MULTIPLE,
 	OPERA_DIVIDE
-} operator_24;
+} seeker_operator;
 
 typedef enum {
 	TNODE_TYPE_UNKNOWN = 0,
 	TNODE_TYPE_ROOT,
 	TNODE_TYPE_NUM,
 	TNODE_TYPE_OPERATOR
-} tree_node_type_24;
+} tree_node_type;
 
-#endif // _24_DEFINE_H
+#endif // _FOMULA_SEEKER_DEFINE_H
