@@ -40,7 +40,7 @@ static Boolean append_input_num(int num, int **input, int *count) {
 			return false;
 	}
 
-	(*input)[*count++] = num;
+	(*input)[(*count)++] = num;
 
 	return true;
 }
@@ -125,7 +125,7 @@ int main(int argc, char** argv) {
 	if (result_count > 0) {
 		printf("there are %d results for input ", result_count);
 		int j;
-		for (j = 0; j < argc - 1; ++j)
+		for (j = 0; j < input_count; ++j)
 			printf("%d ",input[j]);
 		printf(",\nthey are : \n");
 		for (i = 0; i < result_count; ++i) {
@@ -135,7 +135,7 @@ int main(int argc, char** argv) {
 	} else if (result_count == 0) {
 		printf("no result found for input ");
 		int j;
-		for (j = 0; j < argc - 1; ++j)
+		for (j = 0; j < input_count; ++j)
 			printf(" %d",input[j]);
 		printf("\n");
 
