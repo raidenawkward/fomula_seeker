@@ -5,7 +5,6 @@
 
 #include "tree.h"
 #include "tree_node.h"
-
 #include "tree_base.h"
 #include "tree_node_base.h"
 #include "tree_operation.h"
@@ -38,7 +37,6 @@ static struct Tree* create_assistant_tree(struct tree_operations* t_op) {
 	root->childs = NULL;
 	root->child_count = 0;
 	root->flag = TNODE_TYPE_ROOT;
-	root->data = OPERA_INVALID;
 
 	tree->root = root;
 	tree->node_opera = node_op;
@@ -55,23 +53,16 @@ static void destory_assistant_tree(struct Tree **tree, struct tree_operations *t
 	t_op->destory(tree);
 }
 
-static Boolean init_tree_root_node(struct Tree *tree, struct tree_operations *t_op, Int32 *num_set, Int32 num_count) {
-	if (!tree || !t_op || !num_set || num_count < 0)
+static Boolean init_tree_root_node(struct Tree *tree, struct tree_operations *t_op, Int32 *num_set, Int32 num_count, SeekerOperator *operator_set, Int32 operator_count) {
+	if (!tree || !t_op || !num_set || num_count < 0 || !num_set || !operator_set || !num_count || !operator_count)
 		return false;
 	if (!tree->root)
 		return false;
 
-	Int32 i;
-	for (i = 0; i < num_count; ++i) {
-		struct tree_node *node = (struct tree_node*)malloc(sizeof(struct tree_node));
-		if (!node)
-			return false;
-
-		node->data = num_set[i];
-		node->flag = TNODE_TYPE_NUM;
-		if (!t_op->append_child(tree,tree->root,node))
-			return false;
-	}
+	if (!used_set_init(&(tree->root->data.num_used_set),num_count))
+		return false;
+	if (!used_set_init(&(tree->root->data.opt_used_set),operator_count))
+		return false;
 
 	return true;
 }
@@ -88,12 +79,15 @@ static Int32 init_operator_set(SeekerOperator** set) {
 	return count;
 }
 
-static Boolean next_unused_operator(SeekerOperator *operator_set, Boolean *used_set, SeekerOperator *result) {
-	return false;
+static Boolean constitute_assist_node(struct tree_node *node, struct Tree *tree, struct tree_operations *tree_opt, Int32 *num_set, Int32 num_count) {
+
 }
 
-static Boolean next_unused_number(Int32 *num_set, Boolean *used_set, Int32 *result) {
-	return false;
+static Boolean constitute_assist_tree(struct Tree *tree, struct tree_operations *tree_opt, Int32 *num_set, Int32 num_count) {
+	if (!tree || !tree_opt || !num_set)
+		return false;
+	if (!tree->root || num_count <= 0)
+		return false;
 }
 
 Int32 seek_fomula(Int32 target, Int32 *num_set, Int32 num_count, Char*** result) {
@@ -104,23 +98,16 @@ Int32 seek_fomula(Int32 target, Int32 *num_set, Int32 num_count, Char*** result)
 	if (!assistant_tree)
 		return -1;
 
-	if (!init_tree_root_node(assistant_tree,tree_operation,num_set,num_count))
-		return -1;
-
 	SeekerOperator *operator_set;
 	Int32 operator_count = init_operator_set(&operator_set);
 	if (operator_count <= 0)
 		return 0;
 
-	struct used_set *num_used_set, *operator_used_set;
-	if (!used_set_init(&num_used_set,num_count))
-		return -1;
-	if (!used_set_init(&operator_used_set,operator_count))
+	if (!init_tree_root_node(assistant_tree,tree_operation,num_set,num_count,operator_set,operator_count))
 		return -1;
 
 
-	used_set_destory(&num_used_set);
-	used_set_destory(&operator_used_set);
+
 	free(operator_set);
 	destory_assistant_tree(&assistant_tree,tree_operation);
 	free(tree_operation);
