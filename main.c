@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
 	int result_count = seek_fomula(CALCULATED_TARGET,input,argc - 1,&ret);
 
 	if (result_count > 0) {
-		printf("there are %d results for input ");
+		printf("there are %d results for input ", result_count);
 		int j;
 		for (j = 0; j < argc - 1; ++j)
 			printf("%d ",input[j]);

@@ -3,8 +3,6 @@
 
 #include <stdio.h>
 
-typedef char TreeElement;
-
 typedef enum {
 	false = 0,
 	true
@@ -20,6 +18,8 @@ typedef enum {
 	TREE_TYPE_UNKNOWN
 } tree_type_t;
 
+
+typedef UChar TreeElement;
 
 typedef enum {
 	TREE_TRAVERSE_PREORDER =0,
