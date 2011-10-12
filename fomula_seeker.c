@@ -197,9 +197,11 @@ Int32 seek_fomula(Int32 target, Int32 *num_set, Int32 num_count, Char*** result)
 	if (!constitute_assist_tree(assistant_tree,tree_operation,num_set,num_count,operator_set,operator_count))
 		return -1;
 
+#if 1
 	printf("operator count : %d\n",operator_count);
 	printf("tree depth : %d\n",tree_operation->tree_depth(assistant_tree));
 	tree_operation->traverse(assistant_tree,TREE_TRAVERSE_WIDTHPRIORITY,visit);
+#endif
 
 	free(operator_set);
 	destory_assistant_tree(&assistant_tree,tree_operation);
