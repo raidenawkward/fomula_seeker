@@ -101,9 +101,8 @@ int main(int argc, char** argv) {
 			if (argi <= argc) {
 				if (is_num(argv[argi])) {
 					target = atoi(argv[argi++]);
-				}
-				else {
-					printf("error : invalid param '%s' for option %s\n",argv[argi],argv[argi - 1]);
+				} else {
+					printf("error : invalid param '%s' for option %s\n",argv[argi]?argv[argi]:"null",argv[argi - 1]);
 					show_help_info(argv[0]);
 					exit(0);
 				}
