@@ -1,7 +1,7 @@
 #include "used_set.h"
 
 Boolean used_set_init(struct used_set **set, Int32 count) {
-	if (count <= 0)
+	if (count < 0)
         return false;
     *set = (struct used_set*)malloc(sizeof(struct used_set));
     if (!*set)
