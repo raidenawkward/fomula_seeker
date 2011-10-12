@@ -69,3 +69,26 @@ Boolean used_set_union(struct used_set *s1, struct used_set *s2) {
 
 	return true;
 }
+
+Int32 used_set_next_used_index(struct used_set *set, Int32 current_index) {
+	if (!set || current_index < 0)
+		return -1;
+	Int32 i = current_index + 1;
+	for (; i < set->count; ++i) {
+		if (set->used[i])
+			return i;
+	}
+	return -1;
+}
+
+Int32 used_set_next_unused_index(struct used_set *set, Int32 current_index) {
+	if (!set || current_index < 0)
+		return -1;
+	Int32 i = current_index + 1;
+	for (; i < set->count; ++i) {
+		if (!set->used[i])
+			return i;
+	}
+	return -1;
+
+}

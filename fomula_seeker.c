@@ -79,15 +79,30 @@ static Int32 init_operator_set(SeekerOperator** set) {
 	return count;
 }
 
-static Boolean constitute_assist_node(struct tree_node *node, struct Tree *tree, struct tree_operations *tree_opt, Int32 *num_set, Int32 num_count) {
+static void constitute_assist_node(struct tree_node *node, struct Tree *tree, struct tree_operations *tree_opt, Int32 *num_set, Int32 num_count, SeekerOperator* operator_set, Int32 operator_count) {
+	if (!node || !tree || !tree_opt || !num_set || !operator_set)
+		return;
+	if (num_count <=0 || operator_count <= 0)
+		return;
 
+	if (node->flag == TNODE_TYPE_ROOT || node->flag == TNODE_TYPE_OPERATOR) {
+
+	} else if (node->flag == TNODE_TYPE_NUM) {
+
+	}
+	else {
+		return;
+	}
 }
 
-static Boolean constitute_assist_tree(struct Tree *tree, struct tree_operations *tree_opt, Int32 *num_set, Int32 num_count) {
-	if (!tree || !tree_opt || !num_set)
+static Boolean constitute_assist_tree(struct Tree *tree, struct tree_operations *tree_opt, Int32 *num_set, Int32 num_count, SeekerOperator* operator_set, Int32 operator_count) {
+	if (!tree || !tree_opt || !num_set || !operator_set)
 		return false;
-	if (!tree->root || num_count <= 0)
+	if (!tree->root || num_count <= 0 || operator_count <= 0)
 		return false;
+
+	constitute_assist_node(tree->root,tree,tree_opt,num_set,num_count,operator_set,operator_count);
+	return true;
 }
 
 Int32 seek_fomula(Int32 target, Int32 *num_set, Int32 num_count, Char*** result) {
@@ -106,7 +121,8 @@ Int32 seek_fomula(Int32 target, Int32 *num_set, Int32 num_count, Char*** result)
 	if (!init_tree_root_node(assistant_tree,tree_operation,num_set,num_count,operator_set,operator_count))
 		return -1;
 
-
+	if (!constitute_assist_tree(assistant_tree,tree_operation,num_set,num_count,operator_set,operator_count))
+		return -1;
 
 	free(operator_set);
 	destory_assistant_tree(&assistant_tree,tree_operation);
