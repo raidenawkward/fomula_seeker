@@ -34,3 +34,38 @@ void used_set_clear(struct used_set *set) {
         set->used[i] = false;
     }
 }
+
+Int32 used_set_used_num(struct used_set *set) {
+	if (!set)
+		return 0;
+
+	Int32 i,ret = 0;
+	for (i = 0; i < set->count; ++i) {
+		if (set->used[i])
+			++ret;
+	}
+	return ret;
+}
+
+Int32 used_set_unused_num(struct used_set *set) {
+	if (!set)
+		return 0;
+	return set->count - used_set_used_num(set);
+}
+
+Boolean used_set_union(struct used_set *s1, struct used_set *s2) {
+	if (!s1 || !s2)
+		return false;
+	if (s1->count != s2->count || !s1->used)
+		return false;
+
+	if (!s2->used)
+		return true;
+
+	Int32 i;
+	for (i = 0; i < s1->count; ++i) {
+		s1->used[i] = s1->used[i] || s2->used[i];
+	}
+
+	return true;
+}
