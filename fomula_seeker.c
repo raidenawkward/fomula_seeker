@@ -68,7 +68,7 @@ static Boolean init_tree_root_node(struct Tree *tree, struct tree_operations *t_
 }
 
 static Int32 init_operator_set(SeekerOperator** set) {
-	Int32 count = OPERA_DIVIDE - OPERA_INVALID + 1;
+	Int32 count = OPERA_DIVIDE - OPERA_INVALID;
 	*set = (SeekerOperator*)malloc(count * sizeof(SeekerOperator));
 	if (!set)
 		return -1;
@@ -87,7 +87,7 @@ static void constitute_assist_node(struct tree_node *node, struct Tree *tree, st
 
 	if (node->flag == TNODE_TYPE_ROOT || node->flag == TNODE_TYPE_OPERATOR) {
 		Int32 i;
-		for (i = used_set_next_unused_index(node->data.num_used_set,0);
+		for (i = used_set_next_unused_index(node->data.num_used_set,-1);
 			i >=0 && i < node->data.num_used_set->count;
 			i = used_set_next_unused_index(node->data.num_used_set,i)) {
 			struct tree_node *child = (struct tree_node*)malloc(sizeof(struct tree_node));
@@ -116,7 +116,7 @@ static void constitute_assist_node(struct tree_node *node, struct Tree *tree, st
 
 	} else if (node->flag == TNODE_TYPE_NUM) {
 		Int32 i;
-		for (i = used_set_next_unused_index(node->data.operator_used_set,0);
+		for (i = used_set_next_unused_index(node->data.operator_used_set,-1);
 			i >= 0 && i < node->data.operator_used_set->count;
 			i =  used_set_next_unused_index(node->data.operator_used_set,i)) {
 			struct tree_node *child = (struct tree_node*)malloc(sizeof(struct tree_node));
@@ -147,12 +147,23 @@ static void constitute_assist_node(struct tree_node *node, struct Tree *tree, st
 	else {
 		return;
 	}
+
+	Int32 i;
+	for (i = 0; i < node->child_count; ++i) {
+		constitute_assist_node(node->childs[i],tree,tree_opt,num_set,num_count,operator_set,operator_count);
+	}
 }
 
 static Int32 visit (struct tree_node *node) {
-	if (node)
-		printf("node : %d\n",node->data.data);
-	else
+	if (node) {
+		Int32 level = 0;
+		struct tree_node *parent = node->parent;;
+		while(parent) {
+			++level;
+			parent = parent->parent;
+		}
+		printf("level : %d, type : %d, node : %d\n",level,node->flag,node->data.data);
+	} else
 		printf("empty node\n");
 	return 1;
 }
@@ -186,7 +197,8 @@ Int32 seek_fomula(Int32 target, Int32 *num_set, Int32 num_count, Char*** result)
 	if (!constitute_assist_tree(assistant_tree,tree_operation,num_set,num_count,operator_set,operator_count))
 		return -1;
 
-//	printf("tree depth : %d\n",tree_operation->tree_depth(assistant_tree));
+	printf("operator count : %d\n",operator_count);
+	printf("tree depth : %d\n",tree_operation->tree_depth(assistant_tree));
 	tree_operation->traverse(assistant_tree,TREE_TRAVERSE_WIDTHPRIORITY,visit);
 
 	free(operator_set);
