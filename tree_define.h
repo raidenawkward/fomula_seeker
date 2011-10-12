@@ -22,7 +22,7 @@ typedef enum {
 
 struct assist_tree_element {
     struct used_set *num_used_set;
-    struct used_set *opt_used_set;
+    struct used_set *operator_used_set;
 	UChar data;
 };
 

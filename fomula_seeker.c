@@ -61,7 +61,7 @@ static Boolean init_tree_root_node(struct Tree *tree, struct tree_operations *t_
 
 	if (!used_set_init(&(tree->root->data.num_used_set),num_count))
 		return false;
-	if (!used_set_init(&(tree->root->data.opt_used_set),operator_count))
+	if (!used_set_init(&(tree->root->data.operator_used_set),operator_count))
 		return false;
 
 	return true;
@@ -86,13 +86,75 @@ static void constitute_assist_node(struct tree_node *node, struct Tree *tree, st
 		return;
 
 	if (node->flag == TNODE_TYPE_ROOT || node->flag == TNODE_TYPE_OPERATOR) {
+		Int32 i;
+		for (i = used_set_next_unused_index(node->data.num_used_set,0);
+			i >=0 && i < node->data.num_used_set->count;
+			i = used_set_next_unused_index(node->data.num_used_set,i)) {
+			struct tree_node *child = (struct tree_node*)malloc(sizeof(struct tree_node));
+			if (!child)
+				return;
+			child->parent = node;
+			child->childs = NULL;
+			child->child_count = 0;
+			child->flag = TNODE_TYPE_NUM;
+			if (!used_set_init(&child->data.num_used_set,num_count))
+				return;
+			if (!used_set_init(&child->data.operator_used_set,operator_count))
+				return;
+
+			if (!used_set_union(child->data.num_used_set,node->data.num_used_set))
+				return;
+			if (!used_set_union(child->data.operator_used_set,node->data.operator_used_set))
+				return;
+
+			child->data.data = num_set[i];
+			child->data.num_used_set->used[i] = true;
+
+			if (!tree_opt->append_child(tree,node,child))
+				return;
+		}
 
 	} else if (node->flag == TNODE_TYPE_NUM) {
+		Int32 i;
+		for (i = used_set_next_unused_index(node->data.operator_used_set,0);
+			i >= 0 && i < node->data.operator_used_set->count;
+			i =  used_set_next_unused_index(node->data.operator_used_set,i)) {
+			struct tree_node *child = (struct tree_node*)malloc(sizeof(struct tree_node));
+			if (!child)
+				return;
+			child->parent = node;
+			child->childs = NULL;
+			child->child_count = 0;
+			child->flag = TNODE_TYPE_OPERATOR;
 
+			if (!used_set_init(&child->data.num_used_set,num_count))
+                return;
+            if (!used_set_init(&child->data.operator_used_set,operator_count))
+                return;
+
+            if (!used_set_union(child->data.num_used_set,node->data.num_used_set))
+                return;
+            if (!used_set_union(child->data.operator_used_set,node->data.operator_used_set))
+                return;
+
+			child->data.data = operator_set[i];
+            child->data.operator_used_set->used[i] = true;
+
+            if (!tree_opt->append_child(tree,node,child))
+                return;
+		}
 	}
 	else {
 		return;
 	}
+}
+
+static Int32 visit (struct tree_node *node) {
+	if (node)
+		printf("node : %d\n",node->data.data);
+	else
+		printf("empty node\n");
+	return 1;
 }
 
 static Boolean constitute_assist_tree(struct Tree *tree, struct tree_operations *tree_opt, Int32 *num_set, Int32 num_count, SeekerOperator* operator_set, Int32 operator_count) {
@@ -123,6 +185,9 @@ Int32 seek_fomula(Int32 target, Int32 *num_set, Int32 num_count, Char*** result)
 
 	if (!constitute_assist_tree(assistant_tree,tree_operation,num_set,num_count,operator_set,operator_count))
 		return -1;
+
+//	printf("tree depth : %d\n",tree_operation->tree_depth(assistant_tree));
+	tree_operation->traverse(assistant_tree,TREE_TRAVERSE_WIDTHPRIORITY,visit);
 
 	free(operator_set);
 	destory_assistant_tree(&assistant_tree,tree_operation);
