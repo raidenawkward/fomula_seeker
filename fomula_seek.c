@@ -214,6 +214,15 @@ Int32 seek_fomula(Int32 target, Int32 *num_set, Int32 num_count, Char*** result)
 	struct tree_node **terminal_tree_nodes;
 	Int32 terminal_tree_node_count = tree_operation->terminative_nodes(assistant_tree,&terminal_tree_nodes);
 
+#if 1
+	Int32 i;
+	for (i = 0; i < terminal_tree_node_count; ++i) {
+		Char* result = NULL;
+		tree_branch_fomula_string(terminal_tree_nodes[i],&result);
+		printf("%s\n",result);
+	}
+#endif
+
 	struct tree_node **qualified_tree_nodes;
 	Int32 qualified_tree_node_count = filter_qualified_tree_nodes(target,terminal_tree_nodes, terminal_tree_node_count, &qualified_tree_nodes);
 

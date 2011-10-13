@@ -6,7 +6,7 @@ OBJS := $(SRC:.c=.o)
 
 EXLIBS := -L./lib -ltree
 
-TAR_EXEC := a
+TAR_EXEC := b
 
 default:$(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(TAR_EXEC) $(EXLIBS)
