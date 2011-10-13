@@ -5,7 +5,7 @@
 static Char* operator_to_str(SeekerOperator operator) {
 	Char* ret = NULL;
 	Int32 length = 0;
-	printf("operator : %d\n",operator);
+
 	switch (operator) {
 	case OPERA_PLUS:
 		length = strlen(FOMULA_SYMBOL_OPERATOR_PLUS);

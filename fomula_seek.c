@@ -69,13 +69,13 @@ static Boolean init_tree_root_node(struct Tree *tree, struct tree_operations *t_
 }
 
 static Int32 init_operator_set(SeekerOperator** set) {
-	Int32 count = OPERA_DIVIDE - OPERA_INVALID;
+	Int32 count = OPERA_INVALID - OPERA_PLUS;
 	*set = (SeekerOperator*)malloc(count * sizeof(SeekerOperator));
-	if (!set)
+	if (!*set)
 		return -1;
 	Int32 i;
 	for (i = 0; i < count; ++i)
-		(*set)[i] = OPERA_INVALID + i;
+		(*set)[i] = OPERA_PLUS + i;
 
 	return count;
 }
