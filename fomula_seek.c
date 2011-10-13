@@ -1,6 +1,6 @@
-#include "fomula_seeker.h"
+#include "fomula_seek.h"
 
-#include "fomula_seeker_define.h"
+#include "fomula_seek_define.h"
 #include "tree_define.h"
 
 #include "tree.h"
@@ -10,6 +10,7 @@
 #include "tree_operation.h"
 
 #include "used_set.h"
+#include "fomula_parse.h"
 
 
 static struct tree_operations *init_tree_operation() {
@@ -181,6 +182,16 @@ static Boolean constitute_assist_tree(struct Tree *tree, struct tree_operations 
 	return true;
 }
 
+static Int32 filter_qualified_tree_nodes(Int32 target, struct tree_node **input, Int32 input_count, struct tree_node ***output) {
+	if (!input || !*input)
+		return -1;
+
+	if (input_count <= 0)
+		return 0;
+
+	
+}
+
 Int32 seek_fomula(Int32 target, Int32 *num_set, Int32 num_count, Char*** result) {
 	Int32 res_count = 0;
 
@@ -200,11 +211,13 @@ Int32 seek_fomula(Int32 target, Int32 *num_set, Int32 num_count, Char*** result)
 	if (!constitute_assist_tree(assistant_tree,tree_operation,num_set,num_count,operator_set,operator_count))
 		return -1;
 
-#if 1
-	printf("operator count : %d\n",operator_count);
-	printf("tree depth : %d\n",tree_operation->tree_depth(assistant_tree));
-	tree_operation->traverse(assistant_tree,TREE_TRAVERSE_WIDTHPRIORITY,visit);
-#endif
+	struct tree_node **terminal_tree_nodes;
+	Int32 terminal_tree_node_count = tree_operation->terminative_nodes(assistant_tree,&terminal_tree_nodes);
+
+	struct tree_node **qualified_tree_nodes;
+	Int32 qualified_tree_node_count = filter_qualified_tree_nodes(target,terminal_tree_nodes, terminal_tree_node_count, &qualified_tree_nodes);
+
+	res_count = qualified_tree_node_count;
 
 	free(operator_set);
 	destory_assistant_tree(&assistant_tree,tree_operation);

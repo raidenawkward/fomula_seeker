@@ -3,7 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "fomula_seeker.h"
+#include "fomula_seek.h"
 
 #define CALCULATED_TARGET 24
 

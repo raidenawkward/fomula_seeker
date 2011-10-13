@@ -2,7 +2,7 @@
 #define _TREE_DEFINE_H
 
 #include <stdio.h>
-#include "fomula_seeker_define.h"
+#include "fomula_seek_define.h"
 
 typedef enum {
 	false = 0,
