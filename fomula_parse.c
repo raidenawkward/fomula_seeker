@@ -72,8 +72,64 @@ static Char* node_data_to_str(struct tree_node *node) {
 	return ret;
 }
 
-Boolean tree_branch_calculated_result(struct tree_node *branch_header, Int32 *result) {
+static Boolean calculate(Int32 num1, Int32 num2, SeekerOperator operator,Int32 *result) {
+	switch (operator) {
+	case OPERA_PLUS:
+		*result = num1 + num2;
+		break;
+	case OPERA_SUBTRACT:
+		*result = num1 - num2;
+		break;
+	case OPERA_MULTIPLE:
+		*result = num1 * num2;
+		break;
+	case OPERA_DIVIDE:
+		if (num2 == 0)
+			return false;
+		*result = num1 / num2;
+		break;
+	case OPERA_INVALID:
+	default:
+		return false;
+		break;
+	}
+	return true;
+}
 
+Boolean tree_branch_calculated_result(struct tree_node *branch_header, Int32 *result) {
+	if (!branch_header || !result)
+		return false;
+
+	struct tree_node *current_node = branch_header;
+
+	SeekerOperator current_operator = OPERA_INVALID;
+	Boolean operator_loaded = false;
+	while(current_node->parent != NULL) {
+		switch (current_node->flag) {
+		case TNODE_TYPE_NUM:
+			if (!operator_loaded) {
+				*result = current_node->data.data;
+			} else {
+				if (!calculate(*result,current_node->data.data,current_operator,result))
+					return false;
+			}
+			break;
+		case TNODE_TYPE_OPERATOR:
+			current_operator = current_node->data.data;
+			break;
+		case TNODE_TYPE_ROOT:
+			// never reached
+			return true;
+			break;
+		case TNODE_TYPE_UNKNOWN:
+		default:
+			return false;
+		}
+
+		current_node = current_node->parent;
+	}
+
+	return true;
 }
 
 Boolean tree_branch_fomula_string(struct tree_node *branch_header, Char **result) {

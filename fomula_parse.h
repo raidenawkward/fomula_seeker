@@ -11,7 +11,9 @@
 #define FOMULA_SYMBOL_OPERATOR_MULTIPLE "*"
 #define FOMULA_SYMBOL_OPERATOR_DIVISION "/"
 
+
 Boolean tree_branch_calculated_result(struct tree_node *branch_header, Int32 *result);
 Boolean tree_branch_fomula_string(struct tree_node *branch_header, Char** result);
+
 
 #endif // _FOMULA_PARSE_H

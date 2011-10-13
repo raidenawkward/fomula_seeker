@@ -189,10 +189,39 @@ static Int32 filter_qualified_tree_nodes(Int32 target, struct tree_node **input,
 	if (input_count <= 0)
 		return 0;
 
-	
+	Int32 output_count = 0;
+	*output = (struct tree_node**)malloc(sizeof(struct tree_node*));
+
+	Int32 i;
+	for (i = 0; i < input_count; ++i) {
+		Int32 result;
+		if (tree_branch_calculated_result(input[i],&result)) {
+			if (result == target) {
+				if (output_count == 0) {
+					*output = (struct tree_node**)malloc(sizeof(struct tree_node*));
+					if (!*output)
+						return -1;
+				} else {
+					struct tree_node **new_ptr = (struct tree_node**)realloc(*output,(output_count + 1) * sizeof(struct tree_node*));
+					if (!new_ptr)
+						return -1;
+					*output = new_ptr;
+				}
+				(*output)[output_count] = (struct tree_node*)malloc(sizeof(struct tree_node));
+				if (!(*output)[output_count])
+					return -1;
+				(*output)[output_count] = input[i];
+				++output_count;
+			} else
+				continue;
+		} else
+			continue;
+	}
+
+	return output_count;
 }
 
-Int32 seek_fomula(Int32 target, Int32 *num_set, Int32 num_count, Char*** result) {
+Int32 seek_fomula(Int32 target, Int32 *num_set, Int32 num_count, Char ***result) {
 	Int32 res_count = 0;
 
 	struct tree_operations *tree_operation = init_tree_operation();
@@ -214,17 +243,29 @@ Int32 seek_fomula(Int32 target, Int32 *num_set, Int32 num_count, Char*** result)
 	struct tree_node **terminal_tree_nodes;
 	Int32 terminal_tree_node_count = tree_operation->terminative_nodes(assistant_tree,&terminal_tree_nodes);
 
-#if 1
-	Int32 i;
-	for (i = 0; i < terminal_tree_node_count; ++i) {
+#if 0
+	Int32 ii;
+	for (ii = 0; ii < terminal_tree_node_count; ++ii) {
 		Char* result = NULL;
-		tree_branch_fomula_string(terminal_tree_nodes[i],&result);
+		tree_branch_fomula_string(terminal_tree_nodes[ii],&result);
 		printf("%s\n",result);
 	}
 #endif
 
 	struct tree_node **qualified_tree_nodes;
 	Int32 qualified_tree_node_count = filter_qualified_tree_nodes(target,terminal_tree_nodes, terminal_tree_node_count, &qualified_tree_nodes);
+
+	if (qualified_tree_node_count < 0)
+		return qualified_tree_node_count;
+
+	*result = (Char**)malloc(sizeof(Char*));
+	if (!*result)
+		return -1;
+	Int32 i;
+	for (i = 0; i < qualified_tree_node_count; ++i) {
+		if(!tree_branch_fomula_string(qualified_tree_nodes[i],&(*result)[i]))
+			return -1;
+	}
 
 	res_count = qualified_tree_node_count;
 
