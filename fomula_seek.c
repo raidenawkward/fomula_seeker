@@ -202,7 +202,7 @@ static Int32 filter_qualified_tree_nodes(Int32 target, struct tree_node **input,
 	for (i = 0; i < input_count; ++i) {
 		Int32 result;
 		if (tree_branch_calculated_result(input[i],&result)) {
-#if 1
+#if 0
 			Char* re;
 			tree_branch_fomula_string(input[i],&re);
 			printf("result for %s : %d\n",re,result);
@@ -254,15 +254,6 @@ Int32 seek_fomula(Int32 target, Int32 *num_set, Int32 num_count, Char ***result)
 	struct tree_node **terminal_tree_nodes;
 	Int32 terminal_tree_node_count = tree_operation->terminative_nodes(assistant_tree,&terminal_tree_nodes);
 
-#if 0
-	Int32 ii;
-	for (ii = 0; ii < terminal_tree_node_count; ++ii) {
-		Char* result = NULL;
-		tree_branch_fomula_string(terminal_tree_nodes[ii],&result);
-		printf("%s\n",result);
-	}
-#endif
-
 	struct tree_node **qualified_tree_nodes;
 	Int32 qualified_tree_node_count = filter_qualified_tree_nodes(target,terminal_tree_nodes, terminal_tree_node_count, &qualified_tree_nodes);
 
@@ -280,9 +271,10 @@ Int32 seek_fomula(Int32 target, Int32 *num_set, Int32 num_count, Char ***result)
 
 	res_count = qualified_tree_node_count;
 
+#if 0
 	free(operator_set);
 	destory_assistant_tree(&assistant_tree,tree_operation);
 	free(tree_operation);
-
+#endif
 	return res_count;
 }
