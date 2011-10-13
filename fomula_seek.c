@@ -120,9 +120,15 @@ static void constitute_assist_node(struct tree_node *node, struct Tree *tree, st
 
 	} else if (node->flag == TNODE_TYPE_NUM) {
 		Int32 i;
+#ifdef FORMULA_SEEKER_DEF_OPERATOR_USED_ONCE
 		for (i = used_set_next_unused_index(node->data.operator_used_set,-1);
 			i >= 0 && i < node->data.operator_used_set->count;
 			i =  used_set_next_unused_index(node->data.operator_used_set,i)) {
+#else
+		for (i = OPERA_PLUS;
+			i < OPERA_INVALID;
+			i = i + 1) {
+#endif
 			struct tree_node *child = (struct tree_node*)malloc(sizeof(struct tree_node));
 			if (!child)
 				return;
