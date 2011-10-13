@@ -196,6 +196,11 @@ static Int32 filter_qualified_tree_nodes(Int32 target, struct tree_node **input,
 	for (i = 0; i < input_count; ++i) {
 		Int32 result;
 		if (tree_branch_calculated_result(input[i],&result)) {
+#if 1
+			Char* re;
+			tree_branch_fomula_string(input[i],&re);
+			printf("result for %s : %d\n",re,result);
+#endif
 			if (result == target) {
 				if (output_count == 0) {
 					*output = (struct tree_node**)malloc(sizeof(struct tree_node*));

@@ -116,6 +116,7 @@ Boolean tree_branch_calculated_result(struct tree_node *branch_header, Int32 *re
 			break;
 		case TNODE_TYPE_OPERATOR:
 			current_operator = current_node->data.data;
+			operator_loaded = true;
 			break;
 		case TNODE_TYPE_ROOT:
 			// never reached
