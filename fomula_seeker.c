@@ -85,6 +85,9 @@ static void constitute_assist_node(struct tree_node *node, struct Tree *tree, st
 	if (num_count <=0 || operator_count <= 0)
 		return;
 
+	if (used_set_unused_num(node->data.num_used_set) == 0)
+		return;
+
 	if (node->flag == TNODE_TYPE_ROOT || node->flag == TNODE_TYPE_OPERATOR) {
 		Int32 i;
 		for (i = used_set_next_unused_index(node->data.num_used_set,-1);
