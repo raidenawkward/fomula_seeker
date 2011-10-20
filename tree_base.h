@@ -9,7 +9,7 @@
 Boolean tree_create (struct Tree **tree, tree_type_t type);
 /// tree destory, and nodes of tree would also be deleted
 void tree_destory (struct Tree **tree);
-/// clear tree members, and nodes of tree would also be deleted
+/// clear tree to empty, but nodes of tree would not be deleted
 Int32 tree_clear (struct Tree **tree);
 /// returns numbers of cleared nodes
 Boolean tree_is_empty (struct Tree *tree);

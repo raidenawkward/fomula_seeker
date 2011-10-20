@@ -16,7 +16,7 @@ struct Tree {
 struct tree_operations {
 	Boolean (*create) (struct Tree **tree, tree_type_t type);
 	void (*destory) (struct Tree **tree);
-	Int32 (*clear) (struct Tree **tree); /// returns numbers of cleared nodes
+	Int32 (*clear) (struct Tree **tree); /// just clear, will not delete any nodes returns numbers of cleared nodes
 	Boolean (*is_empty) (struct Tree *tree);
 	Int32 (*tree_depth) (struct Tree *tree); /// returns depth of tree (0 is beginning)
 	Int32 (*tree_width) (struct Tree *tree); /// returns node count between most left and most right nodes;

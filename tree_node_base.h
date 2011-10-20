@@ -6,6 +6,8 @@
 #include "tree_define.h"
 #include "tree_node.h"
 
+/// create new node
+struct tree_node* treenode_create();
 /// get root node from a node
 struct tree_node* treenode_get_root (struct tree_node* node);
 /// get parent node of a node
@@ -30,10 +32,11 @@ struct tree_node* treenode_remove_child (struct tree_node *node, Int32 index);
 struct tree_node* treenode_get_left_sibling (struct tree_node *node);
 /// get right sibling of node in parent node
 struct tree_node* treenode_get_right_sibling (struct tree_node *node);
-/// compare tree node
-Boolean treenode_equal_node (struct tree_node *n1, struct tree_node *n2);
+/// compare tree nodes content from different addrs
+Boolean treenode_equal_nodes (struct tree_node *n1, struct tree_node *n2);
+Boolean treenode_equal_node_data (TreeElement d1, TreeElement d2);
 /// free node and its childs
-Int32 treenode_free_node (struct tree_node *node);
+Int32 treenode_free_nodes (struct tree_node *root);
 /// get depth of node
 Int32 treenode_get_node_largest_depth (struct tree_node *node, Int32 base_depth);
 //// get distance between most left node and most right node
